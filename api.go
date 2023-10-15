@@ -26,6 +26,8 @@ func (server *ApiServer) Run() {
 	router := mux.NewRouter()
 	router.HandleFunc("/account", makeHTTPHandleFucn(server.handleAccount))
 	router.HandleFunc("/account/{id}", makeHTTPHandleFucn(server.handleAccountById))
+	router.HandleFunc("/transfer", makeHTTPHandleFucn(server.handleTrasferAccount))
+
 	fmt.Println("Go Bank Running on port : ", server.listenAddress)
 	log.Fatal(http.ListenAndServe(server.listenAddress, router))
 
@@ -105,7 +107,12 @@ func (server *ApiServer) handleDeleteAccount(w http.ResponseWriter, r *http.Requ
 }
 
 func (server *ApiServer) handleTrasferAccount(w http.ResponseWriter, r *http.Request) error {
-	return nil
+	transferReq := new(TransferRequest)
+	if err := json.NewDecoder(r.Body).Decode(transferReq); err != nil {
+		return err
+	}
+	defer r.Body.Close()
+	return WriteJSON(w, http.StatusOK, transferReq)
 }
 
 func GetId(r *http.Request) (int, error) {

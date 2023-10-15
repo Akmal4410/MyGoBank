@@ -6,7 +6,8 @@ import (
 )
 
 type TransferRequest struct {
-	ToAccound int64 `json:"toAccount"`
+	ToAccound int64   `json:"toAccount"`
+	Amount    float64 `json:"amount"`
 }
 
 type CreateAccountRequest struct {
